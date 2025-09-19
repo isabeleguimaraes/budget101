@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 # Create your models here.
 
@@ -9,21 +10,21 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     budget = models.DecimalField(max_digits=9, decimal_places=2)
+
+    class Meta:
+        unique_together = ['user', 'name']
     
 
     @property
     def total_expenses(self):
-        total_amount = 0
-        for row in self.expense_set.all():
-            total_amount += row.amount
-        return total_amount
+        return self.expense_set.aggregate(Sum('amount'))['amount__sum'] or 0
     
     @property
     def available_amount(self):
         return self.budget - self.total_expenses
     
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.user.username}"
 
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
