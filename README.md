@@ -49,10 +49,6 @@ A RESTful API for managing personal expenses and budget categories. This is my f
 7. Start the local development server:
     `python manage.py runserver`
 
-## Deployment / Live API
-
-The API is hosted online at: 
-
 ## Available Endpoints
 
 ### Expenses
